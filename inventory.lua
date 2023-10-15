@@ -4,16 +4,25 @@ local inventory = {}
 --add multiple items in a loop?
 --ask to add on to existing items quantity
 
-function additem()
-  io.write("What item would you like to add?")
-  local item = io.read()
+
+function getitem(name)
+  io.write("What item would you like to " .. name .. "?")
+  return tostring(io.read("*l"))
+end
+
+function getquantity()
   io.write("How many to add?")
-  local quantity = tonumber(io.read("*l"))
+  return tonumber(io.read("*l"))
+end
+
+function additem()
+  local item = getitem("add")
+  local quantity = getquantity()
   if quantity > 0 then
     if inventory[item] ~= nil then
       prevquantity = inventory[item]
       inventory[item] = prevquantity + quantity  
-      print(item .. " already existed, adding " .. quantity .. " + " .. prevquantity .. " to a total of " .. inventory[item])  
+      print(item .. " already exist, adding " .. quantity .. " + " .. prevquantity .. " to a total of " .. inventory[item])  
     else
       inventory[item] = quantity
       print("Adding " .. item .. " with " .. quantity .. " quantity.")
@@ -39,13 +48,12 @@ function list()
 end
 
 function update(item)
-  if item == nil then 
-    io.write("What item would you like to update?")
-    local item = io.read()
+  list()
+  if item == nil then
+    item = getitem("update")
   end
   if inventory[item] ~= nil then
-    io.write("What would you like to change the quantity to?")
-    local quantity = tonumber(io.read("*l"))
+    local quantity = getquantity()
     if quantity > 0 then
       inventory[item] = quantity
       print("Item " .. item .. " updated to a " .. quantity .. " quantity.")
@@ -64,8 +72,7 @@ function update(item)
 end
 
 function delete(item)
-  io.write("What item would you like to delete?")
-  local item = io.read()
+  local item = getitem("delete")
   if inventory[item] ~= nil then
     print("Deleting " .. item .. " with " .. inventory[item] .. " quantity.")
     inventory[item] = nil
