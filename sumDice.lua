@@ -11,26 +11,50 @@ math.randomseed(os.time())
 -- If there are duplicates, 
 -- they are removed and you add up the face value of the remaining dice until you only have 2 or less dice.
 
+function stopwatch(start,finish)
+  elapsed = finish - start
+  
+  hours = math.floor(elapsed / 3600)
+  minutes = math.floor(elapsed / 60 - (hours * 60)) 
+  seconds = elapsed - (minutes * 60) - (hours * 3600)
+  return ("Hours: " .. hours .. " Minutes: " .. minutes .. " Seconds: " .. seconds)
+end
+
+
 turn = 0
 total = 0
 check2 = 0
 dash = "——————————————"
 
-io.write("How many dice do you wish to start with in your collection?")
-local collection = string.gsub(io.read("*l"), "(%D)", ""); collection = tonumber(collection)
-
+repeat
+io.write("How many dice do you wish to start with in your collection? 20/50/100")
+collection = string.gsub(io.read("*l"), "(%D)", "0"); collection = tonumber(collection)
+if collection == (20 or 50 or 100) then
+  collectChk = true
+else
+  print("You must select either 20, 50 or 100.")
+end
+until collectChk == true
+--until collection == (20 or 50 or 100)
 
 while collection > 2 do
 
 
 repeat
   io.write("How many dice do you wish to throw? (Remaining: ", (collection),")")
-  throw = string.gsub(io.read("*l"), "(%D)", ""); throw = tonumber(throw)
+  throw = string.gsub(io.read("*l"), "(%D)", "0"); throw = tonumber(throw)
+  if throw > collection then
+    print("You must use only upto the collection amount, not more!")
+  end
 until throw <= collection
 
 print(dash)
 turn = turn + 1
 print("Turn",turn)
+if start == nil then
+start = os.time()
+--print("start time;",start)
+end
 
 
 
@@ -51,6 +75,7 @@ end
 local sum = 0
 local roll = {}
 local duplicates = {[1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0}
+local unique = {}
 local diceIcon = {[1] = "\u{2680}", [2] = "\u{2681}", [3] = "\u{2682}", [4] = "\u{2683}", [5] = "\u{2684}", [6] = "\u{2685}"}
 
 for i = 1, throw do
@@ -73,9 +98,18 @@ for k, v in pairs(duplicates) do
     -- if dups value is greater than 0 (i.e. 1; unique die), add dice face value 
     if v > 0 then
       sum = sum + k
+      table.insert(unique, k)
     end
   end
 end
+
+for k,v in ipairs(unique) do
+  --print(k,v)
+  io.write(diceIcon[v]) 
+  print(" +",v)
+end
+print("============")
+print("   +",sum)
 
 local dupCount = 0
 for k,v in pairs(duplicates) do
@@ -97,13 +131,19 @@ total = total + sum
 
 print("\t")
 if overMin or (collection < 3) then
+  finish = os.time()
+  --print("finish timer;",finish)
   print("Game over!")
+  print("Final turn:",turn)
+  print("Total time -> ",stopwatch(start,finish))
   collection = 0
 end
 --print("Turn:",turn)
-print("\nAdded: ",sum)
+--print("\nAdded: ",sum)
 print("Total sum: ",total)
+if collection > 2 then
 print("Remaining dice collection: ", collection)
+end
 print(dash)
 print("\t")
 end
