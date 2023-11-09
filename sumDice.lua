@@ -44,7 +44,7 @@ repeat
   io.write("How many dice do you wish to throw? (Remaining: ", (collection),")")
   throw = string.gsub(io.read("*l"), "(%D)", "0"); throw = tonumber(throw)
   if throw > collection then
-    print("You must use only upto the collection amount, not more!")
+    print("Only " .. collection .. " dice in collection. You can not throw more than that.")
   end
 until throw <= collection
 
@@ -103,6 +103,7 @@ for k, v in pairs(duplicates) do
   end
 end
 
+if #unique > 0 then
 for k,v in ipairs(unique) do
   --print(k,v)
   io.write(diceIcon[v]) 
@@ -110,6 +111,7 @@ for k,v in ipairs(unique) do
 end
 print("============")
 print("   +",sum)
+end
 
 local dupCount = 0
 for k,v in pairs(duplicates) do
