@@ -17,7 +17,7 @@ function stopwatch(start,finish)
   hours = math.floor(elapsed / 3600)
   minutes = math.floor(elapsed / 60 - (hours * 60)) 
   seconds = elapsed - (minutes * 60) - (hours * 3600)
-  return ("Hours: " .. hours .. " Minutes: " .. minutes .. " Seconds: " .. seconds)
+  return ("Hour(s): " .. hours .. " Minute(s): " .. minutes .. " Second(s): " .. seconds)
 end
 
 
